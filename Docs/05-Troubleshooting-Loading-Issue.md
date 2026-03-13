@@ -68,8 +68,8 @@ The application shows a loading spinner and doesn't proceed to the sign-in page.
 ### Step 3: Verify Configuration
 Your current configuration:
 ```javascript
-clientId: '4f0d7303-ca48-48e5-849d-f33edf4721a8'
-authority: 'https://login.microsoftonline.com/61086661-96f9-4806-96af-c943028bb27e'
+clientId: 'xxxxxxxxxx'
+authority: 'https://login.microsoftonline.com/xxxxxx'
 redirectUri: 'http://localhost:3000'
 ```
 
