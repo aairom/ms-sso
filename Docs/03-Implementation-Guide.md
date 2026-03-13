@@ -212,13 +212,13 @@ Used for:
 Example calls:
 ```javascript
 // Get site information
-GET https://3w2lyf.sharepoint.com/sites/aamSite/_api/web
+GET https://xxx.sharepoint.com/sites/yoursite/_api/web
 
 // Get lists
-GET https://3w2lyf.sharepoint.com/sites/aamSite/_api/web/lists
+GET https://xxx.sharepoint.com/sites/yoursite/_api/web/lists
 
 // Get list items
-GET https://3w2lyf.sharepoint.com/sites/aamSite/_api/web/lists/getbytitle('Documents')/items
+GET https://xxx.sharepoint.com/sites/yoursite/_api/web/lists/getbytitle('Documents')/items
 ```
 
 ## Error Handling
@@ -338,9 +338,9 @@ graph TD
 ### Test Users
 
 Test with all three users to verify different permission levels:
-- `adminAlainAirom@3w2lyf.onmicrosoft.com` - Admin access
-- `user1@3w2lyf.onmicrosoft.com` - Standard user
-- `user2@3w2lyf.onmicrosoft.com` - Standard user
+- `adminm@mail.com` - Admin access
+- `user1@mail.com` - Standard user
+- `user2@mail.com` - Standard user
 
 ## Deployment Considerations
 
