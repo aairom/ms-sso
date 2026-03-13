@@ -104,14 +104,14 @@ const sharepointConfig = {
         {
             name: 'Site A',
             url: getEnv('SITE_A_URL', 'https://contoso.sharepoint.com/sites/siteA'),
-            siteRelativePath: '/sites/siteA',
+            siteRelativePath: getEnv('SITE_A_PATH', '/sites/siteA'),
             pageUrl: getEnv('SITE_A_PAGE', 'https://contoso.sharepoint.com/sites/siteA/SitePages/Home.aspx'),
             description: 'Primary collaboration site'
         },
         {
             name: 'Site B',
             url: getEnv('SITE_B_URL', 'https://contoso.sharepoint.com/sites/siteB'),
-            siteRelativePath: '/sites/siteB',
+            siteRelativePath: getEnv('SITE_B_PATH', '/sites/siteB'),
             pageUrl: getEnv('SITE_B_PAGE', 'https://contoso.sharepoint.com/sites/siteB/SitePages/Home.aspx'),
             description: 'Secondary collaboration site'
         }

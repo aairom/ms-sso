@@ -99,8 +99,10 @@ ms-sso/
        
        // SharePoint Sites
        SITE_A_URL: 'https://your-tenant-name.sharepoint.com/sites/siteA',
+       SITE_A_PATH: '/sites/siteA',
        SITE_A_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteA/SitePages/Home.aspx',
        SITE_B_URL: 'https://your-tenant-name.sharepoint.com/sites/siteB',
+       SITE_B_PATH: '/sites/siteB',
        SITE_B_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteB/SitePages/Home.aspx',
        
        // Test Users (optional)
@@ -259,8 +261,14 @@ const uiConfig = {
 #### 3. "CORS Error"
 **Solution**: Ensure you're running the app through a web server, not opening the HTML file directly.
 
-#### 4. "Failed to fetch SharePoint data"
-**Solution**: 
+#### 4. "404 itemNotFound - Requested site could not be found"
+**Solution**:
+- Verify SharePoint site paths match your actual sites
+- Check `SITE_A_PATH` and `SITE_B_PATH` in env-config.js
+- See [Docs/13-SharePoint-Site-Path-Fix.md](Docs/13-SharePoint-Site-Path-Fix.md) for detailed fix
+
+#### 5. "Failed to fetch SharePoint data"
+**Solution**:
 - Verify API permissions are granted
 - Check that SharePoint site URLs are correct
 - Ensure user has access to the SharePoint sites
@@ -309,6 +317,12 @@ Comprehensive documentation is available in the `Docs/` folder:
    - Alternative .env file method
    - Security best practices
    - Troubleshooting
+
+5. **[13-SharePoint-Site-Path-Fix.md](Docs/13-SharePoint-Site-Path-Fix.md)**
+   - Fix for 404 "itemNotFound" errors
+   - SharePoint site path configuration
+   - How to find your actual site paths
+   - Common mistakes and solutions
 
 ## 🔒 Security Best Practices
 
