@@ -111,14 +111,14 @@ For SharePoint access, the application needs:
 
 ## Your SharePoint Sites
 
-- **Site 1**: https://3w2lyf.sharepoint.com/sites/aamSite/SitePages/CollabHome.aspx
-- **Site 2**: https://3w2lyf.sharepoint.com/sites/aamSiteNumber2/SitePages/CollabHome.aspx
+- **Site 1**: https://xxx.sharepoint.com/sites/yoursite/SitePages/CollabHome.aspx
+- **Site 2**: https://xxx.sharepoint.com/sites/yoursite2/SitePages/CollabHome.aspx
 
 ## Test Users
 
-- `adminAlainAirom@3w2lyf.onmicrosoft.com` (Administrator)
-- `user1@3w2lyf.onmicrosoft.com` (User)
-- `user2@3w2lyf.onmicrosoft.com` (User)
+- `admin@mail.com` (Administrator)
+- `user1@mail.com` (User)
+- `user2@mail.com` (User)
 
 ## Next Steps
 
