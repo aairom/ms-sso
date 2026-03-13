@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSAL Diagnostic Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        h1 {
+            color: #0078d4;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .config-display {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+    <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
+</head>
+<body>
+    <h1>🔍 MSAL Diagnostic Test</h1>
+    <p>This page will help diagnose why the main application is stuck on loading.</p>
+    
+    <div id="results"></div>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function runTests() {
+            // Test 1: Check if MSAL loaded
+            addResult('<h3>Test 1: MSAL Library</h3>', 'info');
+            if (typeof msal !== 'undefined') {
+                addResult('✅ MSAL library loaded successfully from CDN', 'success');
+                addResult(`MSAL Version: ${msal.version || 'Unknown'}`, 'info');
+            } else {
+                addResult('❌ MSAL library NOT loaded. Check your internet connection or try downloading MSAL locally.', 'error');
+                return; // Stop further tests
+            }
+            
+            // Test 2: Configuration
+            addResult('<h3>Test 2: Configuration</h3>', 'info');
+            const msalConfig = {
+                auth: {
+                    clientId: '4f0d7303-ca48-48e5-849d-f33edf4721a8',
+                    authority: 'https://login.microsoftonline.com/61086661-96f9-4806-96af-c943028bb27e',
+                    redirectUri: window.location.origin
+                },
+                cache: {
+                    cacheLocation: 'sessionStorage',
+                    storeAuthStateInCookie: false
+                }
+            };
+            
+            addResult(`<div class="config-display">
+                <strong>Current Configuration:</strong><br>
+                Client ID: ${msalConfig.auth.clientId}<br>
+                Authority: ${msalConfig.auth.authority}<br>
+                Redirect URI: ${msalConfig.auth.redirectUri}<br>
+                Cache Location: ${msalConfig.cache.cacheLocation}
+            </div>`, 'info');
+            
+            // Test 3: Create MSAL instance
+            addResult('<h3>Test 3: MSAL Instance Creation</h3>', 'info');
+            let msalInstance;
+            try {
+                msalInstance = new msal.PublicClientApplication(msalConfig);
+                addResult('✅ MSAL instance created successfully', 'success');
+            } catch (error) {
+                addResult(`❌ Error creating MSAL instance:<br><pre>${error.message}</pre>`, 'error');
+                addResult(`<strong>Possible causes:</strong><br>
+                    - Invalid Client ID format<br>
+                    - Invalid Tenant ID in authority URL<br>
+                    - Configuration syntax error`, 'error');
+                return;
+            }
+            
+            // Test 4: Initialize MSAL
+            addResult('<h3>Test 4: MSAL Initialization</h3>', 'info');
+            msalInstance.initialize()
+                .then(() => {
+                    addResult('✅ MSAL initialized successfully', 'success');
+                    
+                    // Test 5: Handle redirect promise
+                    addResult('<h3>Test 5: Handle Redirect Promise</h3>', 'info');
+                    return msalInstance.handleRedirectPromise();
+                })
+                .then((response) => {
+                    if (response) {
+                        addResult('✅ Redirect response received (user just signed in)', 'success');
+                        addResult(`<pre>${JSON.stringify(response.account, null, 2)}</pre>`, 'info');
+                    } else {
+                        addResult('ℹ️ No redirect response (normal for first load)', 'info');
+                    }
+                    
+                    // Test 6: Check for cached accounts
+                    addResult('<h3>Test 6: Check Cached Accounts</h3>', 'info');
+                    const accounts = msalInstance.getAllAccounts();
+                    if (accounts.length > 0) {
+                        addResult(`✅ Found ${accounts.length} cached account(s)`, 'success');
+                        accounts.forEach((account, index) => {
+                            addResult(`<strong>Account ${index + 1}:</strong><br>
+                                Name: ${account.name}<br>
+                                Username: ${account.username}<br>
+                                Environment: ${account.environment}`, 'info');
+                        });
+                    } else {
+                        addResult('ℹ️ No cached accounts found (user needs to sign in)', 'info');
+                    }
+                    
+                    // Test 7: Test sign-in capability
+                    addResult('<h3>Test 7: Sign-In Test</h3>', 'info');
+                    addResult(`<button onclick="testSignIn()" style="padding: 10px 20px; background-color: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                        Click to Test Sign In
+                    </button>`, 'info');
+                    
+                    // Store instance globally for sign-in test
+                    window.testMsalInstance = msalInstance;
+                    
+                    // Final summary
+                    addResult('<h3>✅ All Tests Passed!</h3>', 'success');
+                    addResult(`<strong>Diagnosis:</strong> MSAL is working correctly. The loading issue in the main app might be due to:<br>
+                        1. JavaScript error in one of the custom scripts (auth.js, sharepoint.js, ui.js)<br>
+                        2. Missing or incorrect function calls<br>
+                        3. Browser console errors (press F12 to check)<br><br>
+                        <strong>Next Steps:</strong><br>
+                        1. Open the main app (index.html)<br>
+                        2. Press F12 to open Developer Tools<br>
+                        3. Go to Console tab<br>
+                        4. Look for red error messages<br>
+                        5. Share the error message for further help`, 'info');
+                })
+                .catch((error) => {
+                    addResult(`❌ Error during MSAL initialization:<br><pre>${error.message}</pre>`, 'error');
+                    addResult(`<strong>Stack trace:</strong><br><pre>${error.stack}</pre>`, 'error');
+                    
+                    if (error.message.includes('AADSTS50011')) {
+                        addResult(`<strong>Solution:</strong> Redirect URI mismatch. Go to Azure Portal and add this redirect URI:<br>
+                            <code>${window.location.origin}</code>`, 'error');
+                    } else if (error.message.includes('AADSTS700016')) {
+                        addResult(`<strong>Solution:</strong> Application not found. Verify your Client ID and Tenant ID in config.js`, 'error');
+                    }
+                });
+        }
+        
+        // Function to test sign-in
+        window.testSignIn = function() {
+            const loginRequest = {
+                scopes: ['User.Read']
+            };
+            
+            addResult('<h3>Attempting Sign-In...</h3>', 'info');
+            
+            window.testMsalInstance.loginPopup(loginRequest)
+                .then((response) => {
+                    addResult('✅ Sign-in successful!', 'success');
+                    addResult(`<pre>${JSON.stringify(response.account, null, 2)}</pre>`, 'info');
+                })
+                .catch((error) => {
+                    addResult(`❌ Sign-in failed:<br><pre>${error.message}</pre>`, 'error');
+                });
+        };
+        
+        // Run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 100);
+        });
+    </script>
+</body>
+</html>

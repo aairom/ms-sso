@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint SSO Demo - Microsoft Entra ID</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- MSAL.js 1.x library from CDN - Supports implicit flow without PKCE -->
+    <script src="https://alcdn.msauth.net/lib/1.4.18/js/msal.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <h1>🔐 SharePoint SSO Demo</h1>
+                <p class="subtitle">Single Sign-On with Microsoft Entra ID</p>
+            </div>
+            <div class="header-actions">
+                <button id="signInBtn" class="btn-primary">Sign In</button>
+                <button id="signOutBtn" class="btn-secondary" style="display: none;">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Sign In Section (shown when not authenticated) -->
+        <section id="signInSection" class="sign-in-section">
+            <div class="welcome-card">
+                <div class="welcome-icon">🌐</div>
+                <h2>Welcome to SharePoint SSO Demo</h2>
+                <p>This application demonstrates Single Sign-On (SSO) authentication using Microsoft Entra ID (formerly Azure Active Directory) to access SharePoint sites.</p>
+                
+                <div class="features">
+                    <h3>Features:</h3>
+                    <ul>
+                        <li>✅ Secure authentication with Microsoft Entra ID</li>
+                        <li>✅ Access multiple SharePoint sites with one login</li>
+                        <li>✅ View site information and lists</li>
+                        <li>✅ Test connectivity to SharePoint sites</li>
+                    </ul>
+                </div>
+                
+                <div class="test-users">
+                    <h3>Test Users:</h3>
+                    <ul>
+                        <li>👤 adminAlainAirom@3w2lyf.onmicrosoft.com (Administrator)</li>
+                        <li>👤 user1@3w2lyf.onmicrosoft.com (User)</li>
+                        <li>👤 user2@3w2lyf.onmicrosoft.com (User)</li>
+                    </ul>
+                </div>
+                
+                <button id="signInBtnLarge" class="btn-primary btn-large" onclick="handleSignInClick()">
+                    Sign In with Microsoft
+                </button>
+                
+                <p class="info-text">
+                    <small>You will be redirected to Microsoft's secure login page</small>
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Content (shown when authenticated) -->
+        <section id="mainContent" style="display: none;">
+            <!-- User Profile Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>👤 User Profile</h2>
+                </div>
+                <div id="userInfo" class="user-info-container">
+                    <!-- User profile will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Actions Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>⚡ Actions</h2>
+                </div>
+                <div class="actions-container">
+                    <button id="refreshBtn" class="btn-action">
+                        🔄 Refresh Data
+                    </button>
+                    <button id="testConnectivityBtn" class="btn-action">
+                        🔍 Test Connectivity
+                    </button>
+                </div>
+            </div>
+
+            <!-- Connectivity Results -->
+            <div id="connectivityResults" class="section-card" style="display: none;">
+                <!-- Connectivity test results will be displayed here -->
+            </div>
+
+            <!-- SharePoint Sites Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>🌐 SharePoint Sites</h2>
+                    <p class="section-description">Your accessible SharePoint sites</p>
+                </div>
+                <div id="sitesContainer" class="sites-container">
+                    <!-- SharePoint sites will be displayed here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-message">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="message-box error-box" style="display: none;">
+        <div class="message-content">
+            <span class="message-icon">❌</span>
+            <div class="message-text-container">
+                <strong class="error-text">Error occurred</strong>
+                <p class="error-details"></p>
+            </div>
+            <button class="message-close" onclick="this.parentElement.parentElement.style.display='none'">×</button>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="message-box success-box" style="display: none;">
+        <div class="message-content">
+            <span class="message-icon">✅</span>
+            <div class="message-text-container">
+                <strong class="success-text">Success</strong>
+            </div>
+            <button class="message-close" onclick="this.parentElement.parentElement.style.display='none'">×</button>
+        </div>
+    </div>
+
+    <!-- Site Details Modal -->
+    <div id="siteDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="siteDetailsContent">
+                <!-- Site details will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2026 SharePoint SSO Demo | Powered by Microsoft Entra ID</p>
+            <p class="footer-links">
+                <a href="Docs/01-SSO-Overview.md" target="_blank">Documentation</a> |
+                <a href="https://learn.microsoft.com/en-us/entra/identity/" target="_blank">Entra ID Docs</a> |
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/sharepoint.js"></script>
+    <script src="scripts/ui.js"></script>
+    
+    <!-- Initialize Application -->
+    <script>
+        // Application initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Application starting...');
+            console.log('App Config:', appConfig);
+            
+            try {
+                // Initialize UI first
+                initializeUI();
+                console.log('UI initialized');
+                
+                // Initialize MSAL and handle authentication
+                const initialized = await initializeMSAL();
+                if (initialized) {
+                    console.log('Application initialized successfully');
+                } else {
+                    console.error('Failed to initialize application');
+                    hideLoading();
+                    showError('Failed to initialize authentication', 'Please check your configuration and browser console for details');
+                }
+            } catch (error) {
+                console.error('Application initialization error:', error);
+                hideLoading();
+                showError('Application initialization failed', error.message || 'Unknown error');
+            }
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && isSignedIn()) {
+                console.log('Page became visible, checking authentication...');
+                // Optionally refresh data when page becomes visible
+            }
+        });
+        
+        // Handle errors globally
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            if (appConfig.showDetailedErrors) {
+                showError('An unexpected error occurred', event.error?.message || 'Unknown error');
+            }
+        });
+        
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            if (appConfig.showDetailedErrors) {
+                showError('An unexpected error occurred', event.reason?.message || 'Unknown error');
+            }
+        });
+    </script>
+</body>
+</html>
