@@ -8,11 +8,13 @@
 // MSAL 1.x Configuration (Implicit Flow - No PKCE)
 const msalConfig = {
     auth: {
-        // Application (client) ID from Azure Portal
-        clientId: '4f0d7303-ca48-48e5-849d-f33edf4721a8',
+        // TODO: Replace with your Application (client) ID from Azure Portal
+        // Example: '12345678-1234-1234-1234-123456789abc'
+        clientId: 'YOUR_CLIENT_ID_HERE',
         
-        // Authority URL with tenant ID
-        authority: 'https://login.microsoftonline.com/61086661-96f9-4806-96af-c943028bb27e',
+        // TODO: Replace with your Directory (tenant) ID from Azure Portal
+        // Example: '87654321-4321-4321-4321-cba987654321'
+        authority: 'https://login.microsoftonline.com/YOUR_TENANT_ID_HERE',
         
         // Redirect URI - must match Azure Portal configuration
         redirectUri: 'http://localhost:3000',
@@ -91,31 +93,31 @@ const graphConfig = {
  * Your actual SharePoint sites
  */
 const sharepointConfig = {
-    // Tenant information
-    tenant: '3w2lyf',
-    tenantDomain: '3w2lyf.sharepoint.com',
+    // TODO: Replace with your tenant information
+    tenant: 'contoso',
+    tenantDomain: 'contoso.sharepoint.com',
     
-    // SharePoint sites to access
+    // TODO: Replace with your actual SharePoint sites
     sites: [
         {
-            name: 'AAM Site',
-            url: 'https://3w2lyf.sharepoint.com/sites/aamSite',
-            siteRelativePath: '/sites/aamSite',
-            pageUrl: 'https://3w2lyf.sharepoint.com/sites/aamSite/SitePages/CollabHome.aspx',
+            name: 'Site A',
+            url: 'https://contoso.sharepoint.com/sites/siteA',
+            siteRelativePath: '/sites/siteA',
+            pageUrl: 'https://contoso.sharepoint.com/sites/siteA/SitePages/Home.aspx',
             description: 'Primary collaboration site'
         },
         {
-            name: 'AAM Site Number 2',
-            url: 'https://3w2lyf.sharepoint.com/sites/aamSiteNumber2',
-            siteRelativePath: '/sites/aamSiteNumber2',
-            pageUrl: 'https://3w2lyf.sharepoint.com/sites/aamSiteNumber2/SitePages/CollabHome.aspx',
+            name: 'Site B',
+            url: 'https://contoso.sharepoint.com/sites/siteB',
+            siteRelativePath: '/sites/siteB',
+            pageUrl: 'https://contoso.sharepoint.com/sites/siteB/SitePages/Home.aspx',
             description: 'Secondary collaboration site'
         }
     ],
     
     // SharePoint REST API base URL
     // Usage: restApiBase + site.siteRelativePath + '/_api/web'
-    restApiBase: 'https://3w2lyf.sharepoint.com'
+    restApiBase: 'https://contoso.sharepoint.com'
 };
 
 /**
@@ -124,17 +126,17 @@ const sharepointConfig = {
  */
 const testUsers = [
     {
-        email: 'adminAlainAirom@3w2lyf.onmicrosoft.com',
+        email: 'admin@contoso.onmicrosoft.com',
         role: 'Administrator',
         description: 'Admin user with full access'
     },
     {
-        email: 'user1@3w2lyf.onmicrosoft.com',
+        email: 'user1@contoso.onmicrosoft.com',
         role: 'User',
         description: 'Standard user'
     },
     {
-        email: 'user2@3w2lyf.onmicrosoft.com',
+        email: 'user2@contoso.onmicrosoft.com',
         role: 'User',
         description: 'Standard user'
     }
