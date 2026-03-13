@@ -74,8 +74,8 @@ Use this checklist to quickly set up and run the SharePoint SSO Demo application
 
 - [ ] **Verify SharePoint URLs**
   - Check that SharePoint site URLs match your sites:
-    - https://3w2lyf.sharepoint.com/sites/aamSite
-    - https://3w2lyf.sharepoint.com/sites/aamSiteNumber2
+    - https://xxx.sharepoint.com/sites/yoursite
+    - https://xxx.sharepoint.com/sites/yoursite2
   - Update if different
 
 ### 3. Run the Application (2 minutes)
@@ -111,9 +111,9 @@ Use this checklist to quickly set up and run the SharePoint SSO Demo application
 
 - [ ] **Enter Credentials**
   - Use one of these test accounts:
-    - adminAlainAirom@3w2lyf.onmicrosoft.com
-    - user1@3w2lyf.onmicrosoft.com
-    - user2@3w2lyf.onmicrosoft.com
+    - admin@mail.com
+    - User1@mail.com
+    - user2@mail.com
   - Enter password
 
 - [ ] **Grant Permissions** (first time only)
