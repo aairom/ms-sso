@@ -1,20 +1,22 @@
 /**
  * Microsoft Entra ID (Azure AD) Configuration
- * 
- * IMPORTANT: Replace the placeholder values with your actual Azure AD app registration details
+ *
+ * This configuration loads sensitive values from the .env file.
+ * Copy .env.example to .env and fill in your actual values.
+ *
  * Follow the setup guide in Docs/02-Azure-Setup-Guide.md to get these values
  */
 
 // MSAL 1.x Configuration (Implicit Flow - No PKCE)
 const msalConfig = {
     auth: {
-        // TODO: Replace with your Application (client) ID from Azure Portal
-        // Example: '12345678-1234-1234-1234-123456789abc'
-        clientId: 'YOUR_CLIENT_ID_HERE',
+        // Application (client) ID from .env file
+        // Fallback to placeholder if .env not loaded
+        clientId: getEnv('CLIENT_ID', 'YOUR_CLIENT_ID_HERE'),
         
-        // TODO: Replace with your Directory (tenant) ID from Azure Portal
-        // Example: '87654321-4321-4321-4321-cba987654321'
-        authority: 'https://login.microsoftonline.com/YOUR_TENANT_ID_HERE',
+        // Directory (tenant) ID from .env file
+        // Fallback to placeholder if .env not loaded
+        authority: `https://login.microsoftonline.com/${getEnv('TENANT_ID', 'YOUR_TENANT_ID_HERE')}`,
         
         // Redirect URI - must match Azure Portal configuration
         redirectUri: 'http://localhost:3000',
@@ -90,53 +92,53 @@ const graphConfig = {
 
 /**
  * SharePoint site configurations
- * Your actual SharePoint sites
+ * Loads from .env file with fallback to default values
  */
 const sharepointConfig = {
-    // TODO: Replace with your tenant information
-    tenant: 'contoso',
-    tenantDomain: 'contoso.sharepoint.com',
+    // Tenant information from .env
+    tenant: getEnv('TENANT_NAME', 'contoso'),
+    tenantDomain: getEnv('TENANT_DOMAIN', 'contoso.sharepoint.com'),
     
-    // TODO: Replace with your actual SharePoint sites
+    // SharePoint sites from .env
     sites: [
         {
             name: 'Site A',
-            url: 'https://contoso.sharepoint.com/sites/siteA',
+            url: getEnv('SITE_A_URL', 'https://contoso.sharepoint.com/sites/siteA'),
             siteRelativePath: '/sites/siteA',
-            pageUrl: 'https://contoso.sharepoint.com/sites/siteA/SitePages/Home.aspx',
+            pageUrl: getEnv('SITE_A_PAGE', 'https://contoso.sharepoint.com/sites/siteA/SitePages/Home.aspx'),
             description: 'Primary collaboration site'
         },
         {
             name: 'Site B',
-            url: 'https://contoso.sharepoint.com/sites/siteB',
+            url: getEnv('SITE_B_URL', 'https://contoso.sharepoint.com/sites/siteB'),
             siteRelativePath: '/sites/siteB',
-            pageUrl: 'https://contoso.sharepoint.com/sites/siteB/SitePages/Home.aspx',
+            pageUrl: getEnv('SITE_B_PAGE', 'https://contoso.sharepoint.com/sites/siteB/SitePages/Home.aspx'),
             description: 'Secondary collaboration site'
         }
     ],
     
     // SharePoint REST API base URL
     // Usage: restApiBase + site.siteRelativePath + '/_api/web'
-    restApiBase: 'https://contoso.sharepoint.com'
+    restApiBase: `https://${getEnv('TENANT_DOMAIN', 'contoso.sharepoint.com')}`
 };
 
 /**
  * Test users for the application
- * These are the users configured in your Azure AD tenant
+ * Loads from .env file with fallback to default values
  */
 const testUsers = [
     {
-        email: 'admin@contoso.onmicrosoft.com',
+        email: getEnv('ADMIN_EMAIL', 'admin@contoso.onmicrosoft.com'),
         role: 'Administrator',
         description: 'Admin user with full access'
     },
     {
-        email: 'user1@contoso.onmicrosoft.com',
+        email: getEnv('USER1_EMAIL', 'user1@contoso.onmicrosoft.com'),
         role: 'User',
         description: 'Standard user'
     },
     {
-        email: 'user2@contoso.onmicrosoft.com',
+        email: getEnv('USER2_EMAIL', 'user2@contoso.onmicrosoft.com'),
         role: 'User',
         description: 'Standard user'
     }

@@ -291,13 +291,21 @@ Comprehensive documentation is available in the `Docs/` folder:
    - API integration
    - Best practices
 
+4. **[12-Environment-Variables-Setup.md](Docs/12-Environment-Variables-Setup.md)**
+   - Environment variables configuration
+   - .env file setup
+   - Security best practices
+   - Troubleshooting
+
 ## 🔒 Security Best Practices
 
-1. **Never commit secrets**: Don't commit Client IDs, Tenant IDs, or secrets to version control
-2. **Use HTTPS in production**: Always use HTTPS for production deployments
-3. **Limit permissions**: Request only necessary API permissions
-4. **Token storage**: MSAL handles secure token storage automatically
-5. **Regular updates**: Keep MSAL.js library updated
+1. **Use .env file**: Store all sensitive configuration in `.env` (never commit to Git)
+2. **Never commit secrets**: The `.env` file is in `.gitignore` - keep it that way
+3. **Use HTTPS in production**: Always use HTTPS for production deployments
+4. **Limit permissions**: Request only necessary API permissions
+5. **Token storage**: MSAL handles secure token storage automatically
+6. **Regular updates**: Keep MSAL.js library updated
+7. **Rotate credentials**: Regularly update Client IDs and secrets
 
 ## 🚀 Deployment
 
