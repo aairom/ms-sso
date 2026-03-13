@@ -129,9 +129,9 @@ graph TD
 
 ⚠️ **Important**: Some permissions require admin consent.
 
-1. Click **Grant admin consent for 3w2lyf**
+1. Click **Grant admin consent for xxxx**
 2. Click **Yes** to confirm
-3. Verify all permissions show "Granted for 3w2lyf" in green
+3. Verify all permissions show "Granted for xxxx" in green
 
 ## Step 4: Configure Token Configuration (Optional)
 
