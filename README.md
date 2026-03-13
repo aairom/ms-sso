@@ -97,7 +97,7 @@ ms-sso/
    sites: [
        {
            name: 'AAM Site',
-           url: 'https://3w2lyf.sharepoint.com/sites/aamSite',
+           url: 'https://contoso.sharepoint.com/sites/aamSite',
            // ...
        }
    ]
@@ -140,29 +140,29 @@ ms-sso/
 3. **Sign In**
    
    Click "Sign In with Microsoft" and use one of the test users:
-   - `adminAlainAirom@3w2lyf.onmicrosoft.com`
-   - `user1@3w2lyf.onmicrosoft.com`
-   - `user2@3w2lyf.onmicrosoft.com`
+   - `admin@contoso.onmicrosoft.com`
+   - `user1@contoso.onmicrosoft.com`
+   - `user2@contoso.onmicrosoft.com`
 
 ## 🔑 Test Users
 
 | Email | Role | Description |
 |-------|------|-------------|
-| adminAlainAirom@3w2lyf.onmicrosoft.com | Administrator | Full access to all sites |
-| user1@3w2lyf.onmicrosoft.com | User | Standard user access |
-| user2@3w2lyf.onmicrosoft.com | User | Standard user access |
+| admin@contoso.onmicrosoft.com | Administrator | Full access to all sites |
+| user1@contoso.onmicrosoft.com | User | Standard user access |
+| user2@contoso.onmicrosoft.com | User | Standard user access |
 
 ## 🌐 SharePoint Sites
 
 The application connects to these SharePoint sites:
 
 1. **AAM Site**
-   - URL: https://3w2lyf.sharepoint.com/sites/aamSite
-   - Page: https://3w2lyf.sharepoint.com/sites/aamSite/SitePages/CollabHome.aspx
+   - URL: https://contoso.sharepoint.com/sites/aamSite
+   - Page: https://contoso.sharepoint.com/sites/aamSite/SitePages/CollabHome.aspx
 
 2. **AAM Site Number 2**
-   - URL: https://3w2lyf.sharepoint.com/sites/aamSiteNumber2
-   - Page: https://3w2lyf.sharepoint.com/sites/aamSiteNumber2/SitePages/CollabHome.aspx
+   - URL: https://contoso.sharepoint.com/sites/aamSiteNumber2
+   - Page: https://contoso.sharepoint.com/sites/aamSiteNumber2/SitePages/CollabHome.aspx
 
 ## 📚 Features
 
