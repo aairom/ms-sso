@@ -1,0 +1,39 @@
+/**
+ * Environment Configuration Template
+ * 
+ * INSTRUCTIONS:
+ * 1. Copy this file to scripts/env-config.js
+ * 2. Replace all placeholder values with your actual configuration
+ * 3. Never commit scripts/env-config.js to Git (it's in .gitignore)
+ * 
+ * This file must be loaded BEFORE config.js in index.html
+ */
+
+// Environment variables - Replace with your actual values
+window.ENV_CONFIG = {
+    // Azure AD Configuration
+    CLIENT_ID: 'YOUR_CLIENT_ID_HERE',
+    TENANT_ID: 'YOUR_TENANT_ID_HERE',
+    
+    // SharePoint Tenant Information
+    TENANT_NAME: 'your-tenant-name',
+    TENANT_DOMAIN: 'your-tenant-name.sharepoint.com',
+    
+    // SharePoint Site URLs
+    SITE_A_URL: 'https://your-tenant-name.sharepoint.com/sites/siteA',
+    SITE_A_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteA/SitePages/Home.aspx',
+    SITE_B_URL: 'https://your-tenant-name.sharepoint.com/sites/siteB',
+    SITE_B_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteB/SitePages/Home.aspx',
+    
+    // Test User Emails (optional - for documentation purposes)
+    ADMIN_EMAIL: 'admin@your-tenant-name.onmicrosoft.com',
+    USER1_EMAIL: 'user1@your-tenant-name.onmicrosoft.com',
+    USER2_EMAIL: 'user2@your-tenant-name.onmicrosoft.com'
+};
+
+// Helper function to get environment variable
+function getEnv(key, defaultValue = '') {
+    return window.ENV_CONFIG[key] || defaultValue;
+}
+
+console.log('✅ Environment configuration loaded');

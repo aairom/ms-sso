@@ -1,21 +1,61 @@
-# Environment Variables Setup Guide
+# Environment Configuration Setup Guide
 
 ## Overview
 
-This project uses a `.env` file to store sensitive configuration values like Client IDs, Tenant IDs, and SharePoint URLs. This approach keeps sensitive information out of version control and makes it easy to configure the application for different environments.
+This project uses `scripts/env-config.js` to store sensitive configuration values like Client IDs, Tenant IDs, and SharePoint URLs. This approach keeps sensitive information out of version control and makes it easy to configure the application for different environments.
 
-## Why Use .env Files?
+**Alternative**: You can also use a `.env` file (see Alternative Method section below).
 
-✅ **Security**: Sensitive credentials are never committed to Git  
-✅ **Flexibility**: Easy to switch between development, staging, and production  
-✅ **Simplicity**: All configuration in one place  
+## Why Use env-config.js?
+
+✅ **Security**: Sensitive credentials are never committed to Git
+✅ **Synchronous Loading**: No async delays, immediate availability
+✅ **Simplicity**: Single JavaScript file, no parsing needed
+✅ **Flexibility**: Easy to switch between development, staging, and production
 ✅ **Best Practice**: Industry-standard approach for managing secrets
 
-## Quick Setup
+## Quick Setup (Recommended Method)
 
 ### Step 1: Copy the Template
 
-Copy `.env.example` to create your `.env` file:
+Copy `scripts/env-config.js.example` to create your configuration file:
+
+```bash
+cp scripts/env-config.js.example scripts/env-config.js
+```
+
+### Step 2: Fill in Your Values
+
+Open `scripts/env-config.js` in a text editor and replace the placeholder values with your actual Azure AD and SharePoint information:
+
+```javascript
+window.ENV_CONFIG = {
+    // Azure AD Configuration
+    CLIENT_ID: 'your-actual-client-id',
+    TENANT_ID: 'your-actual-tenant-id',
+    
+    // SharePoint Configuration
+    TENANT_NAME: 'your-tenant-name',
+    TENANT_DOMAIN: 'your-tenant-name.sharepoint.com',
+    
+    // SharePoint Sites
+    SITE_A_URL: 'https://your-tenant-name.sharepoint.com/sites/siteA',
+    SITE_A_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteA/SitePages/Home.aspx',
+    SITE_B_URL: 'https://your-tenant-name.sharepoint.com/sites/siteB',
+    SITE_B_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteB/SitePages/Home.aspx',
+    
+    // Test Users (optional)
+    ADMIN_EMAIL: 'admin@your-tenant-name.onmicrosoft.com',
+    USER1_EMAIL: 'user1@your-tenant-name.onmicrosoft.com',
+    USER2_EMAIL: 'user2@your-tenant-name.onmicrosoft.com'
+};
+```
+
+## Alternative Method: Using .env File
+
+If you prefer using a `.env` file:
+
+### Step 1: Copy the Template
 
 ```bash
 cp .env.example .env
@@ -23,7 +63,7 @@ cp .env.example .env
 
 ### Step 2: Fill in Your Values
 
-Open `.env` in a text editor and replace the placeholder values with your actual Azure AD and SharePoint information:
+Open `.env` in a text editor:
 
 ```env
 # Azure AD Configuration
@@ -95,21 +135,27 @@ SITE_A_PAGE=https://contoso.sharepoint.com/sites/aamSite/SitePages/CollabHome.as
 
 ## How It Works
 
-### 1. Environment Loader
+### 1. Environment Configuration (Recommended)
 
-The `scripts/env-loader.js` file loads and parses the `.env` file:
+The `scripts/env-config.js` file provides immediate, synchronous access to configuration:
 
 ```javascript
-// Loads .env file and makes variables available
-await loadEnv();
+// env-config.js sets window.ENV_CONFIG
+window.ENV_CONFIG = {
+    CLIENT_ID: 'your-client-id',
+    TENANT_ID: 'your-tenant-id',
+    // ...
+};
 
-// Access variables using getEnv()
-const clientId = getEnv('CLIENT_ID', 'default-value');
+// Helper function for easy access
+function getEnv(key, defaultValue = '') {
+    return window.ENV_CONFIG[key] || defaultValue;
+}
 ```
 
-### 2. Configuration
+### 2. Configuration Usage
 
-The `scripts/config.js` file uses environment variables:
+The `scripts/config.js` file uses the environment configuration:
 
 ```javascript
 const msalConfig = {
@@ -124,152 +170,190 @@ const msalConfig = {
 
 The application loads files in this order:
 
-1. `env-loader.js` - Loads environment variables
-2. `config.js` - Uses environment variables
+1. `env-config.js` - Sets window.ENV_CONFIG (synchronous)
+2. `config.js` - Uses getEnv() to read configuration
 3. `auth.js` - Uses configuration
 4. `sharepoint.js` - Uses configuration
 5. `ui.js` - Uses configuration
+
+**Key Advantage**: No async delays, configuration is immediately available.
 
 ## Security Best Practices
 
 ### ✅ DO
 
-- ✅ Keep `.env` file in `.gitignore`
-- ✅ Use `.env.example` as a template (without real values)
-- ✅ Store real credentials only in `.env`
-- ✅ Use different `.env` files for different environments
+- ✅ Keep `scripts/env-config.js` in `.gitignore`
+- ✅ Use `scripts/env-config.js.example` as a template (without real values)
+- ✅ Store real credentials only in `scripts/env-config.js`
+- ✅ Use different env-config.js files for different environments
 - ✅ Rotate credentials regularly
+- ✅ Also keep `.env` in `.gitignore` if using alternative method
 
 ### ❌ DON'T
 
-- ❌ Never commit `.env` to Git
-- ❌ Never share `.env` file publicly
-- ❌ Never put real credentials in `.env.example`
+- ❌ Never commit `scripts/env-config.js` to Git
+- ❌ Never share `scripts/env-config.js` file publicly
+- ❌ Never put real credentials in `scripts/env-config.js.example`
 - ❌ Never hardcode credentials in source code
-- ❌ Never email or message `.env` file contents
+- ❌ Never email or message configuration files with real credentials
 
 ## Troubleshooting
 
-### Problem: "Environment variables not loaded"
+### Problem: "Environment configuration not loaded"
 
-**Solution**: Ensure `.env` file exists in the project root:
+**Solution**: Ensure `scripts/env-config.js` exists:
 
 ```bash
-# Check if .env exists
-ls -la .env
+# Check if env-config.js exists
+ls -la scripts/env-config.js
 
 # If not, copy from template
-cp .env.example .env
+cp scripts/env-config.js.example scripts/env-config.js
 ```
 
 ### Problem: "Authentication fails with placeholder values"
 
-**Solution**: Verify you've replaced all placeholder values in `.env`:
+**Solution**: Verify you've replaced all placeholder values in `scripts/env-config.js`:
 
 ```bash
 # Check for placeholder values
-grep "YOUR_" .env
-grep "your-" .env
+grep "YOUR_" scripts/env-config.js
+grep "your-" scripts/env-config.js
 
 # Should return no results if properly configured
 ```
 
-### Problem: "Cannot read .env file"
+### Problem: "endpoints_resolution_error"
 
-**Solution**: Ensure you're running the app through a web server (not file://):
+**Solution**: This means CLIENT_ID or TENANT_ID are undefined. Check:
 
-```bash
-# Start a local server
-python -m http.server 3000
-# or
-npx http-server -p 3000
+1. `scripts/env-config.js` exists and has real values
+2. File is loaded before `config.js` in `index.html`
+3. No syntax errors in `env-config.js`
+
+```html
+<!-- Correct order in index.html -->
+<script src="scripts/env-config.js"></script>
+<script src="scripts/config.js"></script>
 ```
 
-### Problem: "CORS error when loading .env"
+### Problem: "Cannot read property of undefined"
 
-**Solution**: The `.env` file must be served by the same web server as your application. Ensure:
+**Solution**: Ensure `window.ENV_CONFIG` is set before other scripts load:
 
-1. `.env` is in the project root
-2. You're accessing via `http://localhost:3000` (not `file://`)
-3. Your web server is configured to serve `.env` files
+```javascript
+// Check in browser console
+console.log(window.ENV_CONFIG);
+// Should show your configuration object
+```
 
 ## Multiple Environments
 
 ### Development Environment
 
-Create `.env.development`:
+Create `scripts/env-config.dev.js`:
 
-```env
-CLIENT_ID=dev-client-id
-TENANT_ID=dev-tenant-id
-TENANT_NAME=dev-tenant
+```javascript
+window.ENV_CONFIG = {
+    CLIENT_ID: 'dev-client-id',
+    TENANT_ID: 'dev-tenant-id',
+    TENANT_NAME: 'dev-tenant',
+    // ...
+};
 ```
 
 ### Production Environment
 
-Create `.env.production`:
+Create `scripts/env-config.prod.js`:
 
-```env
-CLIENT_ID=prod-client-id
-TENANT_ID=prod-tenant-id
-TENANT_NAME=prod-tenant
+```javascript
+window.ENV_CONFIG = {
+    CLIENT_ID: 'prod-client-id',
+    TENANT_ID: 'prod-tenant-id',
+    TENANT_NAME: 'prod-tenant',
+    // ...
+};
 ```
 
 ### Switching Environments
 
 ```bash
 # Use development
-cp .env.development .env
+cp scripts/env-config.dev.js scripts/env-config.js
 
 # Use production
-cp .env.production .env
+cp scripts/env-config.prod.js scripts/env-config.js
 ```
+
+**Tip**: Add `scripts/env-config.*.js` to `.gitignore` to exclude all environment-specific files.
 
 ## Verification Checklist
 
 Before running the application, verify:
 
-- [ ] `.env` file exists in project root
+- [ ] `scripts/env-config.js` file exists
 - [ ] `CLIENT_ID` is set to your Azure AD Application ID
 - [ ] `TENANT_ID` is set to your Azure AD Tenant ID
 - [ ] `TENANT_NAME` matches your SharePoint tenant
 - [ ] `TENANT_DOMAIN` matches your SharePoint domain
 - [ ] SharePoint site URLs are correct
 - [ ] No placeholder values remain (no `YOUR_` or `your-`)
-- [ ] `.env` is listed in `.gitignore`
+- [ ] `scripts/env-config.js` is listed in `.gitignore`
+- [ ] `scripts/env-config.js` loads before `config.js` in `index.html`
 
 ## Example Configuration
 
 Here's a complete example (with fake values):
 
-```env
-# Azure AD Configuration
-CLIENT_ID=a1b2c3d4-e5f6-7890-abcd-ef1234567890
-TENANT_ID=9876fedc-ba09-8765-4321-0fedcba98765
+```javascript
+// scripts/env-config.js
+window.ENV_CONFIG = {
+    // Azure AD Configuration
+    CLIENT_ID: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    TENANT_ID: '9876fedc-ba09-8765-4321-0fedcba98765',
+    
+    // SharePoint Configuration
+    TENANT_NAME: 'contoso',
+    TENANT_DOMAIN: 'contoso.sharepoint.com',
+    
+    // SharePoint Sites
+    SITE_A_URL: 'https://contoso.sharepoint.com/sites/marketing',
+    SITE_A_PAGE: 'https://contoso.sharepoint.com/sites/marketing/SitePages/Home.aspx',
+    SITE_B_URL: 'https://contoso.sharepoint.com/sites/sales',
+    SITE_B_PAGE: 'https://contoso.sharepoint.com/sites/sales/SitePages/Home.aspx',
+    
+    // Test Users
+    ADMIN_EMAIL: 'admin@contoso.onmicrosoft.com',
+    USER1_EMAIL: 'john.doe@contoso.onmicrosoft.com',
+    USER2_EMAIL: 'jane.smith@contoso.onmicrosoft.com'
+};
 
-# SharePoint Configuration
-TENANT_NAME=contoso
-TENANT_DOMAIN=contoso.sharepoint.com
-
-# SharePoint Sites
-SITE_A_URL=https://contoso.sharepoint.com/sites/marketing
-SITE_A_PAGE=https://contoso.sharepoint.com/sites/marketing/SitePages/Home.aspx
-SITE_B_URL=https://contoso.sharepoint.com/sites/sales
-SITE_B_PAGE=https://contoso.sharepoint.com/sites/sales/SitePages/Home.aspx
-
-# Test Users
-ADMIN_EMAIL=admin@contoso.onmicrosoft.com
-USER1_EMAIL=john.doe@contoso.onmicrosoft.com
-USER2_EMAIL=jane.smith@contoso.onmicrosoft.com
+function getEnv(key, defaultValue = '') {
+    return window.ENV_CONFIG[key] || defaultValue;
+}
 ```
 
 ## Additional Resources
 
-- [Azure AD App Registration Guide](Docs/02-Azure-Setup-Guide.md)
-- [Configuration Guide](Docs/03-Implementation-Guide.md)
-- [Troubleshooting Guide](Docs/05-Troubleshooting-Loading-Issue.md)
+- [Azure AD App Registration Guide](02-Azure-Setup-Guide.md)
+- [Configuration Guide](03-Implementation-Guide.md)
+- [Troubleshooting Guide](05-Troubleshooting-Loading-Issue.md)
+
+## Summary
+
+**Recommended Approach**: Use `scripts/env-config.js`
+- ✅ Synchronous loading (no delays)
+- ✅ Immediate availability
+- ✅ Simple JavaScript object
+- ✅ No parsing required
+
+**Alternative Approach**: Use `.env` file
+- ⚠️ Requires async loading
+- ⚠️ May cause timing issues
+- ✅ Industry standard format
+- ✅ Works with build tools
 
 ---
 
-**Last Updated**: 2026-03-13  
-**Related Files**: `.env`, `.env.example`, `scripts/env-loader.js`, `scripts/config.js`
+**Last Updated**: 2026-03-13
+**Related Files**: `scripts/env-config.js`, `scripts/env-config.js.example`, `.env`, `.env.example`, `scripts/config.js`

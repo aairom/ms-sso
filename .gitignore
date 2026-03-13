@@ -9,6 +9,7 @@ config.local.js
 secrets.js
 .env
 .env.local
+scripts/env-config.js
 
 # Node modules (if using npm)
 node_modules/

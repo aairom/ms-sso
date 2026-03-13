@@ -161,25 +161,20 @@
     </footer>
 
     <!-- Scripts -->
-    <!-- Load environment variables first -->
-    <script src="scripts/env-loader.js"></script>
+    <!-- Load environment configuration first (synchronously) -->
+    <script src="scripts/env-config.js"></script>
+    
+    <!-- Now load other scripts in order -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/sharepoint.js"></script>
+    <script src="scripts/ui.js"></script>
     
     <!-- Initialize Application -->
     <script>
         // Application initialization
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('Application starting...');
-            
-            // Load environment variables first
-            await loadEnv();
-            console.log('Environment variables loaded');
-            
-            // Now load configuration and other scripts dynamically
-            await loadScript('scripts/config.js');
-            await loadScript('scripts/auth.js');
-            await loadScript('scripts/sharepoint.js');
-            await loadScript('scripts/ui.js');
-            
             console.log('App Config:', appConfig);
             
             try {
@@ -214,7 +209,7 @@
         // Handle errors globally
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
-            if (appConfig.showDetailedErrors) {
+            if (appConfig && appConfig.showDetailedErrors) {
                 showError('An unexpected error occurred', event.error?.message || 'Unknown error');
             }
         });
@@ -222,21 +217,10 @@
         // Handle unhandled promise rejections
         window.addEventListener('unhandledrejection', (event) => {
             console.error('Unhandled promise rejection:', event.reason);
-            if (appConfig.showDetailedErrors) {
+            if (appConfig && appConfig.showDetailedErrors) {
                 showError('An unexpected error occurred', event.reason?.message || 'Unknown error');
             }
         });
-        
-        // Helper function to load scripts dynamically
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
     </script>
 </body>
 </html>

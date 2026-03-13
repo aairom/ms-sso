@@ -75,33 +75,45 @@ ms-sso/
 
 ### Step 2: Configure Application
 
-1. **Update Configuration File**
+1. **Create Environment Configuration File**
    
-   Open `scripts/config.js` and replace the placeholder values:
+   Copy the template to create your configuration:
+
+   ```bash
+   cp scripts/env-config.js.example scripts/env-config.js
+   ```
+
+2. **Update Configuration Values**
+   
+   Open `scripts/env-config.js` and replace the placeholder values with your actual Azure AD and SharePoint information:
 
    ```javascript
-   const msalConfig = {
-       auth: {
-           clientId: 'YOUR_CLIENT_ID_HERE',        // From Azure Portal
-           authority: 'https://login.microsoftonline.com/YOUR_TENANT_ID_HERE',
-           redirectUri: 'http://localhost:3000'
-       },
-       // ... rest of config
+   window.ENV_CONFIG = {
+       // Azure AD Configuration
+       CLIENT_ID: 'your-actual-client-id',
+       TENANT_ID: 'your-actual-tenant-id',
+       
+       // SharePoint Configuration
+       TENANT_NAME: 'your-tenant-name',
+       TENANT_DOMAIN: 'your-tenant-name.sharepoint.com',
+       
+       // SharePoint Sites
+       SITE_A_URL: 'https://your-tenant-name.sharepoint.com/sites/siteA',
+       SITE_A_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteA/SitePages/Home.aspx',
+       SITE_B_URL: 'https://your-tenant-name.sharepoint.com/sites/siteB',
+       SITE_B_PAGE: 'https://your-tenant-name.sharepoint.com/sites/siteB/SitePages/Home.aspx',
+       
+       // Test Users (optional)
+       ADMIN_EMAIL: 'admin@your-tenant-name.onmicrosoft.com',
+       USER1_EMAIL: 'user1@your-tenant-name.onmicrosoft.com',
+       USER2_EMAIL: 'user2@your-tenant-name.onmicrosoft.com'
    };
    ```
 
-2. **Verify SharePoint Sites**
-   
-   Ensure the SharePoint site URLs in `config.js` match your sites:
-   ```javascript
-   sites: [
-       {
-           name: 'AAM Site',
-           url: 'https://contoso.sharepoint.com/sites/aamSite',
-           // ...
-       }
-   ]
-   ```
+   ⚠️ **Important**:
+   - Never commit `scripts/env-config.js` to Git (it's in `.gitignore`)
+   - Only commit `scripts/env-config.js.example` (the template)
+   - The `.env` file is an alternative configuration method (also supported)
 
 ### Step 3: Run the Application
 
@@ -292,20 +304,22 @@ Comprehensive documentation is available in the `Docs/` folder:
    - Best practices
 
 4. **[12-Environment-Variables-Setup.md](Docs/12-Environment-Variables-Setup.md)**
-   - Environment variables configuration
-   - .env file setup
+   - Environment configuration guide
+   - env-config.js setup
+   - Alternative .env file method
    - Security best practices
    - Troubleshooting
 
 ## 🔒 Security Best Practices
 
-1. **Use .env file**: Store all sensitive configuration in `.env` (never commit to Git)
-2. **Never commit secrets**: The `.env` file is in `.gitignore` - keep it that way
-3. **Use HTTPS in production**: Always use HTTPS for production deployments
-4. **Limit permissions**: Request only necessary API permissions
-5. **Token storage**: MSAL handles secure token storage automatically
-6. **Regular updates**: Keep MSAL.js library updated
-7. **Rotate credentials**: Regularly update Client IDs and secrets
+1. **Use env-config.js**: Store all sensitive configuration in `scripts/env-config.js` (never commit to Git)
+2. **Never commit secrets**: Both `scripts/env-config.js` and `.env` are in `.gitignore` - keep it that way
+3. **Use templates only**: Only commit `.example` files (env-config.js.example, .env.example)
+4. **Use HTTPS in production**: Always use HTTPS for production deployments
+5. **Limit permissions**: Request only necessary API permissions
+6. **Token storage**: MSAL handles secure token storage automatically
+7. **Regular updates**: Keep MSAL.js library updated
+8. **Rotate credentials**: Regularly update Client IDs and secrets
 
 ## 🚀 Deployment
 
